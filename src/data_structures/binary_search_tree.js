@@ -16,7 +16,50 @@ class BinarySearchTree {
   }
 
   insert(key, value = true) {
-    // TODO
+    if (this._root === undefined)
+    {
+      this.Node.key = key;
+      this.Node.value = value;
+      this._root = this.Node;
+      this._count += 1;
+      return;
+    }
+
+    let node = this._root;
+
+    while (node)
+    {
+      if (key < node.key)
+      {
+        if (!node.left)
+        {
+          node.left = new this.Node({key: key, value: value, parent: node});
+          this._count += 1;
+          return;
+        }
+        node = node.left;
+      }
+      else if (key > node.key)
+      {
+        if (!node.right)
+        {
+          node.right = new this.Node({key: key, value: value, parent: node});
+          this._count += 1;
+          return;
+        }
+        node = node.right;
+      }
+      else if (key === node.key)
+      {
+        node.value = value;
+        return;
+      }
+      else
+      {
+        return;
+      }
+    }
+    return;
   }
 
   lookup(key) {
