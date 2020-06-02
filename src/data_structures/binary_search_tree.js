@@ -16,11 +16,7 @@ class BinarySearchTree {
   }
 
   setupRoot(key, value){
-    this.Node.key = key;
-    this.Node.value = value;
-    this.Node.left = undefined;
-    this.Node.right = undefined;
-    this._root = this.Node;
+    this._root = new this.Node({key: key, value: value});
     this._count += 1;
     return;
   }
@@ -84,7 +80,74 @@ class BinarySearchTree {
   }
 
   delete(key) {
+    var node = this._root;
+    console.log("HERE");
+    console.log(node);
+    while (node)
+    {
+      if (key < node.key)
+      {
+        console.log("STEP 1");
+        node = node.left;
+      }
+      else if (key > node.key)
+      {
+        console.log("STEP 2");
+        node = node.right;
+        console.log(node);
+      }
+      else if (key === node.key)
+      {
+        console.log("STEP 3");
+        if (!node.right && !node.left)
+        {
+          console.log("STEP 4");
+          var value = node.value;
+          node = undefined;
+          this._count -= 1;
+          return value;
+        }
+        else if (node.right && !node.left)
+        {
+          node.parent.right = node.right;
+          var value = node.value;
+          node = undefined;
+          this._count -= 1;
+          return value;
+        }
+        else if (node.left && !node.right)
+        {
+          node.parent.left = node.left;
+          var value = node.value;
+          node = undefined;
+          this._count -= 1;
+          return value;
+        }
+        else
+        {
+          var min = node.right;
 
+          while(min.left)
+          {
+            min = min.left;
+          }
+
+          node.value = min.value;
+          min.key = undefined;
+          min.value = undefined;
+          min.left = undefined;
+          min.right = undefined;
+          min.parent = undefined;
+          min = undefined;
+          this._count -= 1;
+          return node.value;
+        }
+      }
+      else
+      {
+        return undefined;
+      }
+    }
   }
 
   count() {

@@ -102,27 +102,56 @@ dataStructures.forEach(TargetDS => {
       });
     });
 
-    // describe('delete', () => {
-    //   it('returns the value for the removed record', () => {
-    //     bst.insert('sahana', 'murthy');
-    //     expect(bst.delete('sahana')).toBe('murthy');
-    //   });
+    describe('delete', () => {
+      // it('returns the value for the removed record', () => {
+      //   bst.insert('sahana', 'murthy');
+      //   expect(bst.delete('sahana')).toBe('murthy');
+      // });
     
-    //   it('returns undefined if the record was not found', () => {
+      // it('returns undefined if the record was not found', () => {
+      //   bst.insert('sahana', 'murthy');
+      //   expect(bst.delete('shawna')).toBe(undefined);
+      // });
     
-    //   });
+      // it('reduces the count by 1', () => {
+      //   expect(bst.count()).toBe(0);
+      //   bst.insert('test');
+      //   expect(bst.count()).toBe(1);
+      //   bst.delete('test');
+      //   expect(bst.count()).toBe(0);
+      // });
     
-    //   it('reduces the count by 1', () => {
+      it('omits the removed record from iteration results', () => {
+        const records = [
+          { key: 'one', value: true},
+          { key: 'two', value: true },
+          { key: 'three', value: false },
+          { key: 'four', value: true },
+          { key: 'five', value: true },
+        ];
+
+        records.forEach(({ key, value }) => {
+          bst.insert(key, value);
+        });
+        bst.delete('three');
+        bst.forEach(key => {
+          expect(bst.lookup(key)).toBeTruthy();
+        });  
+      });
     
-    //   });
-    
-    //   it('omits the removed record from iteration results', () => {
-    
-    //   });
-    
-    //   it('can remove every element in a tree', () => {
-    
-    //   });
+      // it('can remove every element in a tree', () => {
+      //   const keys = ['many', 'keys', 'for', 'this', 'tree'];
+      //   keys.forEach((key, i) => {
+      //     bst.insert(key);
+      //   });
+
+      //   expect(bst.count()).toBe(5);
+      //   keys.forEach((key, i) => {
+      //     bst.delete(key);
+      //   });
+        
+      //   expect(bst.count()).toBe(0);
+      // });
 
     //   describe('scenarios', () => {
     //     // The first step for each of these tests will be to construct
@@ -164,94 +193,94 @@ dataStructures.forEach(TargetDS => {
     //
     //     });
     //   });
-    // });
+    });
 
-    // describe('forEach', () => {
-    //   let records;
-    //   beforeEach(() => {
-    //     records = [
-    //       { key: 'one', value: 'first' },
-    //       { key: 'two', value: 'second' },
-    //       { key: 'three', value: 'third' },
-    //       { key: 'four', value: 'fourth' },
-    //       { key: 'five', value: 'fifth' },
-    //     ];
-    //   });
+    describe('forEach', () => {
+      let records;
+      beforeEach(() => {
+        records = [
+          { key: 'one', value: 'first' },
+          { key: 'two', value: 'second' },
+          { key: 'three', value: 'third' },
+          { key: 'four', value: 'fourth' },
+          { key: 'five', value: 'fifth' },
+        ];
+      });
 
-    //   const sortRecords = (records) => {
-    //     return records.sort((a, b) => a.key.localeCompare(b.key));
-    //   }
+      const sortRecords = (records) => {
+        return records.sort((a, b) => a.key.localeCompare(b.key));
+      }
 
-    //   const fill = (records) => {
-    //     records.forEach(({ key, value }) => {
-    //       bst.insert(key, value);
-    //     });
-    //   }
+      const fill = (records) => {
+        records.forEach(({ key, value }) => {
+          bst.insert(key, value);
+        });
+      }
 
-    //   it('runs the callback 0 times on an empty tree', () => {
-    //     const cb = jest.fn();
-    //     bst.forEach(cb);
+      it('runs the callback 0 times on an empty tree', () => {
+        const cb = jest.fn();
+        bst.forEach(cb);
 
-    //     expect(cb.mock.calls.length).toBe(0);
-    //   });
+        expect(cb.mock.calls.length).toBe(0);
+      });
 
-    //   it('provides {key, value}, index and tree as cb args', () => {
-    //     bst.insert('key', 'value');
+      it('provides {key, value}, index and tree as cb args', () => {
+        bst.insert('key', 'value');
 
-    //     const cb = jest.fn();
-    //     bst.forEach(cb);
+        const cb = jest.fn();
+        bst.forEach(cb);
 
-    //     const callArgs = cb.mock.calls[0];
-    //     expect(callArgs[0].key).toBe('key');
-    //     expect(callArgs[0].value).toBe('value');
-    //     expect(callArgs[1]).toBe(0);
-    //     expect(callArgs[2]).toBe(bst);
-    //   });
+        const callArgs = cb.mock.calls[0];
+        expect(callArgs[0].key).toBe('key');
+        expect(callArgs[0].value).toBe('value');
+        expect(callArgs[1]).toBe(0);
+        expect(callArgs[2]).toBe(bst);
+      });
 
-    //   it('iterates records in key order', () => {
-    //     fill(records);
+      it('iterates records in key order', () => {
+        fill(records);
 
-    //     const cb = jest.fn();
-    //     bst.forEach(cb);
+        const cb = jest.fn();
+        bst.forEach(cb);
 
-    //     sortRecords(records).forEach(({ key, value }, i) => {
-    //       const callArgs = cb.mock.calls[i];
-    //       expect(callArgs[0].key).toBe(key);
-    //       expect(callArgs[0].value).toBe(value);
-    //       expect(callArgs[1]).toBe(i);
-    //       expect(callArgs[2]).toBe(bst);
-    //     });
-    //   });
+        sortRecords(records).forEach(({ key, value }, i) => {
+          const callArgs = cb.mock.calls[i];
+          expect(callArgs[0].key).toBe(key);
+          expect(callArgs[0].value).toBe(value);
+          expect(callArgs[1]).toBe(i);
+          expect(callArgs[2]).toBe(bst);
+        });
+      });
 
-    //   it('iterates correctly for sorted input', () => {
-    //     fill(sortRecords(records));
+      it('iterates correctly for sorted input', () => {
+        fill(sortRecords(records));
 
-    //     const cb = jest.fn();
-    //     bst.forEach(cb);
+        const cb = jest.fn();
+        bst.forEach(cb);
 
-    //     sortRecords(records).forEach(({ key, value }, i) => {
-    //       const callArgs = cb.mock.calls[i];
-    //       expect(callArgs[0].key).toBe(key);
-    //       expect(callArgs[0].value).toBe(value);
-    //       expect(callArgs[1]).toBe(i);
-    //       expect(callArgs[2]).toBe(bst);
-    //     });
-    //   });
+        sortRecords(records).forEach(({ key, value }, i) => {
+          const callArgs = cb.mock.calls[i];
+          expect(callArgs[0].key).toBe(key);
+          expect(callArgs[0].value).toBe(value);
+          expect(callArgs[1]).toBe(i);
+          expect(callArgs[2]).toBe(bst);
+        });
+      });
 
-    //   it('iterates correctly for reverse-sorted input', () => {
-    //     fill(sortRecords(records).reverse());
+      it('iterates correctly for reverse-sorted input', () => {
+        fill(sortRecords(records).reverse());
 
-    //     const cb = jest.fn();
-    //     bst.forEach(cb);
+        const cb = jest.fn();
+        bst.forEach(cb);
 
-    //     sortRecords(records).forEach(({ key, value }, i) => {
-    //       const callArgs = cb.mock.calls[i];
-    //       expect(callArgs[0].key).toBe(key);
-    //       expect(callArgs[0].value).toBe(value);
-    //       expect(callArgs[1]).toBe(i);
-    //       expect(callArgs[2]).toBe(bst);
-    //     });
-    //   });
-    // });
+        sortRecords(records).forEach(({ key, value }, i) => {
+          const callArgs = cb.mock.calls[i];
+          expect(callArgs[0].key).toBe(key);
+          expect(callArgs[0].value).toBe(value);
+          expect(callArgs[1]).toBe(i);
+          expect(callArgs[2]).toBe(bst);
+        });
+      });
+    });
   });
 });
