@@ -15,13 +15,20 @@ class BinarySearchTree {
     this._root = undefined;
   }
 
+  setupRoot(key, value){
+    this.Node.key = key;
+    this.Node.value = value;
+    this.Node.left = undefined;
+    this.Node.right = undefined;
+    this._root = this.Node;
+    this._count += 1;
+    return;
+  }
+
   insert(key, value = true) {
     if (this._root === undefined)
     {
-      this.Node.key = key;
-      this.Node.value = value;
-      this._root = this.Node;
-      this._count += 1;
+      this.setupRoot(key, value);
       return;
     }
 
@@ -77,7 +84,7 @@ class BinarySearchTree {
   }
 
   delete(key) {
-    // TODO (tests first!)
+
   }
 
   count() {
