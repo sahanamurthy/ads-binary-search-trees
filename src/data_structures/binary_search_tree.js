@@ -81,35 +81,45 @@ class BinarySearchTree {
 
   delete(key) {
     var node = this._root;
-    console.log("HERE");
-    console.log(node);
+
     while (node)
     {
       if (key < node.key)
       {
-        console.log("STEP 1");
         node = node.left;
       }
       else if (key > node.key)
       {
-        console.log("STEP 2");
         node = node.right;
-        console.log(node);
       }
       else if (key === node.key)
       {
-        console.log("STEP 3");
         if (!node.right && !node.left)
         {
-          console.log("STEP 4");
           var value = node.value;
+          if (key === node.parent?.right?.key)
+          {
+            node.parent.right = undefined;
+          }
+          if (key === node.parent?.left?.key)
+          {
+            node.parent.left = undefined;
+          }
           node = undefined;
           this._count -= 1;
           return value;
         }
         else if (node.right && !node.left)
         {
-          node.parent.right = node.right;
+          if (key === node.parent?.right?.key)
+          {
+            node.parent.right = node.right;
+          }
+          if (key === node.parent?.left?.key)
+          {
+            node.parent.left = node.right;
+          }
+
           var value = node.value;
           node = undefined;
           this._count -= 1;
@@ -117,7 +127,15 @@ class BinarySearchTree {
         }
         else if (node.left && !node.right)
         {
-          node.parent.left = node.left;
+          if (key === node.parent?.right?.key)
+          {
+            node.parent.right = node.left;
+          }
+          if (key === node.parent?.left?.key)
+          {
+            node.parent.left = node.left;
+          }
+
           var value = node.value;
           node = undefined;
           this._count -= 1;
@@ -125,22 +143,42 @@ class BinarySearchTree {
         }
         else
         {
-          var min = node.right;
+          var replacement = node.right;
+          var value = node.value;
 
-          while(min.left)
+          if (replacement.left)
           {
-            min = min.left;
-          }
+            while(replacement.left)
+            {
+              replacement = replacement.left;
+            }
 
-          node.value = min.value;
-          min.key = undefined;
-          min.value = undefined;
-          min.left = undefined;
-          min.right = undefined;
-          min.parent = undefined;
-          min = undefined;
-          this._count -= 1;
-          return node.value;
+            node.key = replacement.key;
+            node.value = replacement.value;
+
+            if (replacement.right)
+            {
+              replacement.parent.left = replacement.right;
+            }
+            else
+            {
+              replacement.parent.left = undefined;
+            }
+
+            replacement = undefined;
+            this._count -= 1;
+            return value;
+          }
+          else
+          {
+            node.key = replacement.key;
+            node.value = replacement.value;
+
+            replacement.parent.right = replacement.right;
+            replacement = undefined;
+            this._count -= 1;
+            return value;
+          }
         }
       }
       else
